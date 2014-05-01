@@ -56,6 +56,7 @@ SensuAdmin::Application.routes.draw do
   resources :checks, :id => /.*/
   resources :downtimes
   resources :clients, :id => /.*/
+  resources :hostgroups
   resources :users
   resources :stats
   resources :aggregates

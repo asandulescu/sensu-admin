@@ -1,0 +1,9 @@
+%div{:class => "modal small-modal hide", :id => "client-data-modal"}
+%div{:style => "display: none;", :id => "use_environments", :rel => "#{use_environments?}"}
+
+%p= @clients.methods.sort
+
+- @clients.sort_by(&:name).each do |client|
+  %h5= client.name
+  - @checks.select{ |check| check.subscribers & client.subscriptions != [] }.each do |check|
+    %p= check.name
