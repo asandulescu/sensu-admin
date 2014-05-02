@@ -22,6 +22,10 @@ class Client < Resting
     clienthash
   end
 
+  def history
+    Client.get("clients" + "/#{@name}" + "/history", true)
+  end
+
   # Here so if Client is missing attributes that the view does not fail
   def method_missing(method, *args, &block)
     "None"
