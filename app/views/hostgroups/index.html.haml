@@ -1,14 +1,31 @@
-%div{:class => "modal small-modal hide", :id => "client-data-modal"}
-%div{:style => "display: none;", :id => "use_environments", :rel => "#{use_environments?}"}
+:css
+  .modal {
+    width: 80%;
+    height: 30%;
+    left: 8%;
+    top: 15%;
+  }
+
+%p Note: You can expand a client and submit a history request
 
 
-- @clients.sort_by(&:name).each do |client|
-  - client_history = client.history ## one get per client
-  - keepalive_history = client_history.select { |ch| ch['check'] == 'keepalive' }
-  %h5= client.name
-  %p= keepalive_history
-  - @checks.select{ |check| check.subscribers & client.subscriptions != [] }.each do |check|
-    - check_history = client_history.select { |ch| ch['check'] == check.name }
-    %p= check.name
-    %p= check_history
+%div.accordion{:id => 'client_accordion'}
+  - @clients.sort_by(&:name).each do |client|
+    - client_history = client.history ## one get per client
+    - keepalive_history = client_history.select { |ch| ch['check'] == 'keepalive' }
+    %div.row
+      %div.span12
+        %div.accordion-group
+          %div.accordion-heading
+            %a.accordion-toggle{:href => "#collapse_#{client.name.gsub('.', '_')}", 'data-toggle' => 'collapse', 'data-parent' => '#client_accordion'}
+              = client.name
+          %div.accordion-body.collapse{:rel => "#{client.name.gsub('.', '_')}", :id => "collapse_#{client.name.gsub('.', '_')}"}
+            %div.accordion-inner
 
+              %table.table.table-striped.table-bordered.check-table{:id => "table_for_#{client.name.gsub('.', '_')}"}
+                %tbody
+                  - @checks.select{ |check| check.subscribers & client.subscriptions != [] }.each do |check|
+                    - check_history = client_history.select { |ch| ch['check'] == check.name }
+                    %tr
+                      %td= check.name
+                      %td= check_history
